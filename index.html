@@ -5,18 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Myanmar Livestream</title>
   <style>
-    body { font-family: sans-serif; background: #f0f0f0; margin: 0; }
+    body { font-family: sans-serif; margin: 0; background: #f8f8f8; }
     header { background: #ff6600; color: white; padding: 15px; text-align: center; }
     .container { max-width: 960px; margin: auto; padding: 20px; }
-    .hidden { display: none; }
     .video-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
     }
-    .video-card { background: white; padding: 10px; border-radius: 10px; box-shadow: 0 0 5px #ccc; }
-    video, iframe { width: 100%; height: 200px; border-radius: 8px; object-fit: cover; }
-    .btn { padding: 8px 15px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 5px 0; }
+    .video-card {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    .video-card h3 { margin-top: 5px; font-size: 16px; }
+    .video-card video, .video-card iframe {
+      width: 100%;
+      height: 200px;
+      border-radius: 8px;
+      object-fit: cover;
+    }
+    .comment-section { margin-top: 10px; }
+    .comment-section input { width: 80%; padding: 6px; }
+    .comment-section button { padding: 6px 10px; }
+    .btn { margin: 10px auto; display: block; padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -25,31 +38,18 @@
   </header>
 
   <div class="container">
-    <div id="auth">
-      <h2>🔐 Login / Register</h2>
-      <input id="email" placeholder="Email" /><br/>
-      <input id="password" placeholder="Password" type="password"/><br/>
-      <button class="btn" onclick="login()">Login</button>
-      <button class="btn" onclick="register()">Register</button>
-    </div>
+    <button class="btn" onclick="addDemoStreams()">➕ Add Demo TV Streams</button>
+    <div id="livestreams" class="video-grid"></div>
 
-    <div id="main" class="hidden">
-      <button class="btn" onclick="logout()">🚪 Logout</button>
-      <div id="liveControls" class="hidden">
-        <h2>🎥 Go Live</h2>
-        <button class="btn" onclick="startCamera()">📸 Start Camera</button>
-        <button class="btn" onclick="downloadRecording()">⬇️ Record</button>
-        <video id="preview" autoplay muted style="display:none; width:100%; max-height:300px;"></video>
-      </div>
-
-      <button class="btn" onclick="addDemoStreams()">➕ Add TV Streams</button>
-      <h2>📺 Public TV Channels</h2>
-      <div id="livestreams" class="video-grid"></div>
+    <div style="margin-top: 30px;">
+      <h2>📸 Go Live From Your Camera</h2>
+      <button onclick="startCameraStream()" class="btn">🎥 Start Camera</button>
+      <video id="livePreview" autoplay muted style="display:none; margin-top:10px; width:100%; max-height:300px;"></video>
     </div>
   </div>
 
+  <!-- Firebase Scripts -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
   <script>
@@ -62,187 +62,113 @@
       appId: "1:1048462848567:web:be13b75e0699c39dd045b2"
     };
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
     const db = firebase.firestore();
-
-    const authDiv = document.getElementById("auth");
-    const mainDiv = document.getElementById("main");
-    const preview = document.getElementById("preview");
-    const liveControls = document.getElementById("liveControls");
-    const streamsDiv = document.getElementById("livestreams");
-
-    let currentStream = null;
-    let mediaRecorder;
-    let recordedChunks = [];
-
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        authDiv.style.display = "none";
-        mainDiv.classList.remove("hidden");
-        liveControls.classList.remove("hidden");
-      } else {
-        authDiv.style.display = "block";
-        mainDiv.classList.remove("hidden"); // allow public to see streams
-        liveControls.classList.add("hidden");
-      }
-      loadLivestreams();
-    });
-
-    function register() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(cred => {
-          const uid = cred.user.uid;
-          return db.collection("livestreams").add({
-            title: email.split("@")[0] + "'s Stream",
-            videoUrl: "",
-            userId: uid,
-            createdAt: Date.now(),
-            isLive: false
-          });
-        })
-        .then(() => alert("Registered and stream created!"))
-        .catch(err => alert(err.message));
-    }
-
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      auth.signInWithEmailAndPassword(email, password).catch(err => alert(err.message));
-    }
-
-    function logout() {
-      auth.signOut();
-    }
 
     function addDemoStreams() {
       const demoStreams = [
-        { title: "MRTV HD", videoUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" },
-        { title: "VDO Ninja", videoUrl: "https://vdo.ninja/?view=demo-room" },
-        { title: "Myanmar FM", videoUrl: "https://test-streams.mux.dev/test_001/stream.m3u8" }
+        {
+          title: "MRTV HD (Demo)",
+          videoUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+        },
+        {
+          title: "VDO Ninja Test",
+          videoUrl: "https://vdo.ninja/?view=demo-room"
+        },
+        {
+          title: "Myanmar FM TV",
+          videoUrl: "https://test-streams.mux.dev/test_001/stream.m3u8"
+        }
       ];
-      demoStreams.forEach(s => {
+      demoStreams.forEach(stream => {
         db.collection("livestreams").add({
-          title: s.title,
-          videoUrl: s.videoUrl,
-          createdAt: Date.now(),
-          isLive: true
+          title: stream.title,
+          videoUrl: stream.videoUrl,
+          createdAt: Date.now()
         });
       });
       alert("✅ Demo livestreams added!");
     }
 
     function loadLivestreams() {
+      const container = document.getElementById("livestreams");
       db.collection("livestreams").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-        streamsDiv.innerHTML = "";
+        container.innerHTML = "";
         snapshot.forEach(doc => {
           const data = doc.data();
           const docId = doc.id;
-          if (!data.videoUrl || !data.isLive) return;
           const isIframe = data.videoUrl.includes("vdo.ninja") || data.videoUrl.includes("youtube");
-          const video = isIframe
+          const videoElement = isIframe
             ? `<iframe src="${data.videoUrl}" allow="camera; microphone; autoplay" allowfullscreen></iframe>`
             : `<video controls autoplay muted src="${data.videoUrl}"></video>`;
-          streamsDiv.innerHTML += `
+          const card = `
             <div class="video-card">
               <h3>${data.title}</h3>
-              ${video}
-              <button onclick="like('${docId}')">👍 Like</button>
-              <button onclick="share('${docId}')">🔗 Share</button>
+              ${videoElement}
+              <div style="margin-top: 5px;">
+                <button onclick="likePost('${docId}')">👍 Like</button>
+                <button onclick="sharePost('${docId}')">🔗 Share</button>
+              </div>
               <div class="comment-section">
-                <input type="text" id="comment-${docId}" placeholder="Write a comment...">
+                <input type="text" id="comment-${docId}" placeholder="Write a comment..."/>
                 <button onclick="submitComment('${docId}')">Send</button>
               </div>
-              <div id="comments-${docId}" style="font-size:13px;"></div>
+              <div id="comments-${docId}" style="margin-top: 5px; font-size: 13px;"></div>
             </div>
           `;
+          container.innerHTML += card;
           loadComments(docId);
         });
       });
     }
 
-    function like(docId) {
-      alert("Liked stream: " + docId);
-    }
-
-    function share(docId) {
-      const url = location.href + "#" + docId;
-      navigator.clipboard.writeText(url).then(() => alert("Link copied: " + url));
-    }
-
-    function submitComment(docId) {
-      const input = document.getElementById(`comment-${docId}`);
-      const message = input.value.trim();
+    function submitComment(streamId) {
+      const input = document.getElementById(`comment-${streamId}`);
+      const message = input.value;
       if (!message) return;
       db.collection("comments").add({
-        streamId: docId,
+        streamId,
         message,
-        user: auth.currentUser?.email || "Anonymous",
+        user: "Anonymous",
         timestamp: Date.now()
       });
       input.value = "";
     }
 
-    function loadComments(docId) {
-      const box = document.getElementById(`comments-${docId}`);
+    function loadComments(streamId) {
+      const container = document.getElementById(`comments-${streamId}`);
       db.collection("comments")
-        .where("streamId", "==", docId)
+        .where("streamId", "==", streamId)
         .orderBy("timestamp")
         .onSnapshot(snapshot => {
-          box.innerHTML = "";
+          container.innerHTML = "";
           snapshot.forEach(doc => {
             const data = doc.data();
-            box.innerHTML += `<div><strong>${data.user}</strong>: ${data.message}</div>`;
+            container.innerHTML += `<div><strong>${data.user}:</strong> ${data.message}</div>`;
           });
         });
     }
 
-    function startCamera() {
+    function likePost(docId) {
+      alert("👍 Liked post: " + docId);
+    }
+
+    function sharePost(docId) {
+      const url = window.location.href + "#" + docId;
+      navigator.clipboard.writeText(url)
+        .then(() => alert("🔗 Link copied: " + url));
+    }
+
+    function startCameraStream() {
+      const video = document.getElementById('livePreview');
       navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         .then(stream => {
-          preview.srcObject = stream;
-          preview.style.display = "block";
-          currentStream = stream;
-          mediaRecorder = new MediaRecorder(stream);
-          recordedChunks = [];
-          mediaRecorder.ondataavailable = e => {
-            if (e.data.size > 0) recordedChunks.push(e.data);
-          };
-          mediaRecorder.start();
-          updateUserStream(stream);
+          video.srcObject = stream;
+          video.style.display = 'block';
         })
-        .catch(err => alert("Camera error: " + err.message));
+        .catch(err => alert("Could not access camera: " + err.message));
     }
 
-    function updateUserStream(stream) {
-      const user = auth.currentUser;
-      if (!user) return;
-      const videoUrl = "https://vdo.ninja/?view=" + user.uid;
-      db.collection("livestreams").where("userId", "==", user.uid).limit(1).get()
-        .then(snapshot => {
-          if (!snapshot.empty) {
-            const docId = snapshot.docs[0].id;
-            db.collection("livestreams").doc(docId).update({
-              videoUrl: videoUrl,
-              isLive: true
-            });
-          }
-        });
-    }
-
-    function downloadRecording() {
-      mediaRecorder?.stop();
-      setTimeout(() => {
-        const blob = new Blob(recordedChunks, { type: "video/webm" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "recording.webm";
-        a.click();
-        URL.revokeObjectURL(url);
-      }, 1000);
-    }
+    loadLivestreams();
   </script>
 </body>
 </html>
