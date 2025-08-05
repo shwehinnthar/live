@@ -1,174 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="my">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Myanmar Livestream</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ရွှေဟင်္သာ ရေဒီယို | Shwehinnthar Radio</title>
   <style>
-    body { font-family: sans-serif; margin: 0; background: #f8f8f8; }
-    header { background: #ff6600; color: white; padding: 15px; text-align: center; }
-    .container { max-width: 960px; margin: auto; padding: 20px; }
-    .video-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
+    body {
+      margin: 0;
+      font-family: "Myanmar Text", sans-serif;
+      background: linear-gradient(to bottom, #ffd700, #fff8dc);
+      color: #333;
+      transition: background 0.5s, color 0.5s;
     }
-    .video-card {
-      background: white;
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+
+    .dark-mode {
+      background: #111;
+      color: #eee;
     }
-    .video-card h3 { margin-top: 5px; font-size: 16px; }
-    .video-card video, .video-card iframe {
+
+    header {
+      background-color: #a90002;
+      padding: 20px 10px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2em;
+color: white;
+    }
+
+    header p {
+      margin-top: 5px;
+      font-size: 1.2em;
+ color: #daa520;
+    }
+
+    .container {
+      padding: 30px 20px;
+      max-width: 900px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .logo {
+      max-width: 200px;
+      margin: 20px auto;
+      border-radius: 10px;
+    }
+
+    .radio-player {
+      margin: 30px 0;
+    }
+
+    audio {
       width: 100%;
-      height: 200px;
+      max-width: 500px;
       border-radius: 8px;
-      object-fit: cover;
     }
-    .comment-section { margin-top: 10px; }
-    .comment-section input { width: 80%; padding: 6px; }
-    .comment-section button { padding: 6px 10px; }
-    .btn { margin: 10px auto; display: block; padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+
+    .info, .contact, .map, .social {
+      background-color: #fffbe6;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      line-height: 1.7em;
+    }
+
+    .dark-mode .info,
+    .dark-mode .contact,
+    .dark-mode .map,
+    .dark-mode .social {
+      background-color: #222;
+    }
+
+    .social a {
+      margin: 0 10px;
+      font-size: 1.5em;
+      text-decoration: none;
+      color: #333;
+    }
+
+    .dark-mode .social a {
+      color: #f8f8f8;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 40px;
+      padding-bottom: 20px;
+    }
+
+    .toggle-btn {
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-top: 20px;
+    }
+
+    .toggle-btn:hover {
+      background: #000;
+    }
   </style>
 </head>
 <body>
+
   <header>
-    <h1>📺 Myanmar Livestream</h1>
+    <h1>ရွှေဟင်္သာ ရေဒီယို</h1>
+    <p>Shwehinnthar Radio</p>
   </header>
 
   <div class="container">
-    <button class="btn" onclick="addDemoStreams()">➕ Add Demo TV Streams</button>
-    <div id="livestreams" class="video-grid"></div>
 
-    <div style="margin-top: 30px;">
-      <h2>📸 Go Live From Your Camera</h2>
-      <button onclick="startCameraStream()" class="btn">🎥 Start Camera</button>
-      <video id="livePreview" autoplay muted style="display:none; margin-top:10px; width:100%; max-height:300px;"></video>
+    <!-- 🎨 Logo -->
+    <img src="fmlogo.png" alt="ရွှေဟင်္သာ ရေဒီယို Logo" class="logo">
+
+    <!-- 🌃 Dark Mode Toggle -->
+    <button class="toggle-btn" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+
+    <!-- 📻 Radio Player -->
+    <div class="radio-player">
+      <h2>📻 အသံလွှင့်နေပြီ!</h2>
+      <audio controls autoplay>
+        <source src="https://stream.zeno.fm/nv7i41tz04mtv" type="audio/mpeg">
+        သင့် browser သည် audio player ကို မပံ့ပိုးပါ။
+      </audio>
     </div>
+
+    <!-- 📍 Location Info -->
+    <div class="info">
+      <h3>📍 တည်နေရာ</h3>
+      <p>
+        ရွှေဟင်္သာ ရေဒီယို သည် <br>
+        ပဲခူးတိုင်းဒေသကြီး၊ <br>
+        ညောင်လေးပင်ခရိုင်၊ <br>
+        ညောင်လေးပင်မြို့၊ မြို့မ ၅ ရပ်ကွက်၊ <br>
+        ရွှေဟင်္သာလမ်း၊ ရွှေဟင်္သာစင်တာ <br>
+        တွင် တည်ရှိပါသည်။
+      </p>
+    </div>
+
+    <!-- 📞 Contact Info -->
+    <div class="contact">
+      <h3>📞 ဆက်သွယ်ရန်</h3>
+      <p>
+        ဖုန်း: +959-33913388 <br>
+        Email: shwehinnthar.radio@upanna.com
+      </p>
+    </div>
+
+    <!-- 🌐 Google Map -->
+    <div class="map">
+      <h3>🌐 Google Map</h3>
+      <iframe 
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d152.23059666227097!2d96.7230058!3d17.9632234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30c40b002efab0ad%3A0x5412241dc0cc1fc5!2sShwehinnthar%20Center!5e0!3m2!1sen!2smm!4v1722834745671!5m2!1sen!2smm" 
+  width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+    </div>
+
+    <!-- 📱 Social Media -->
+    <div class="social">
+      <h3>📱 Social Media</h3>
+      <a href="https://facebook.com/hinntharstudio" target="_blank">📘 Facebook</a>
+      <a href="https://www.youtube.com/@shwehinntharlive" target="_blank">▶️ YouTube</a>
+      <a href="https://m.me/hinntharstudio" target="_blank">💬 Messenger</a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      © 2025 ရွှေဟင်္သာ ရေဒီယို | Shwehinnthar Radio
+    </footer>
   </div>
 
-  <!-- Firebase Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBl_w-c4vJhgwslP0plEn49uFbMDSfkMOg",
-      authDomain: "studio-cdde2.firebaseapp.com",
-      projectId: "studio-cdde2",
-      storageBucket: "studio-cdde2.appspot.com",
-      messagingSenderId: "1048462848567",
-      appId: "1:1048462848567:web:be13b75e0699c39dd045b2"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    function addDemoStreams() {
-      const demoStreams = [
-        {
-          title: "MRTV HD (Demo)",
-          videoUrl: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-        },
-        {
-          title: "VDO Ninja Test",
-          videoUrl: "https://vdo.ninja/?view=demo-room"
-        },
-        {
-          title: "Myanmar FM TV",
-          videoUrl: "https://test-streams.mux.dev/test_001/stream.m3u8"
-        }
-      ];
-      demoStreams.forEach(stream => {
-        db.collection("livestreams").add({
-          title: stream.title,
-          videoUrl: stream.videoUrl,
-          createdAt: Date.now()
-        });
-      });
-      alert("✅ Demo livestreams added!");
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
     }
-
-    function loadLivestreams() {
-      const container = document.getElementById("livestreams");
-      db.collection("livestreams").orderBy("createdAt", "desc").onSnapshot(snapshot => {
-        container.innerHTML = "";
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          const docId = doc.id;
-          const isIframe = data.videoUrl.includes("vdo.ninja") || data.videoUrl.includes("youtube");
-          const videoElement = isIframe
-            ? `<iframe src="${data.videoUrl}" allow="camera; microphone; autoplay" allowfullscreen></iframe>`
-            : `<video controls autoplay muted src="${data.videoUrl}"></video>`;
-          const card = `
-            <div class="video-card">
-              <h3>${data.title}</h3>
-              ${videoElement}
-              <div style="margin-top: 5px;">
-                <button onclick="likePost('${docId}')">👍 Like</button>
-                <button onclick="sharePost('${docId}')">🔗 Share</button>
-              </div>
-              <div class="comment-section">
-                <input type="text" id="comment-${docId}" placeholder="Write a comment..."/>
-                <button onclick="submitComment('${docId}')">Send</button>
-              </div>
-              <div id="comments-${docId}" style="margin-top: 5px; font-size: 13px;"></div>
-            </div>
-          `;
-          container.innerHTML += card;
-          loadComments(docId);
-        });
-      });
-    }
-
-    function submitComment(streamId) {
-      const input = document.getElementById(`comment-${streamId}`);
-      const message = input.value;
-      if (!message) return;
-      db.collection("comments").add({
-        streamId,
-        message,
-        user: "Anonymous",
-        timestamp: Date.now()
-      });
-      input.value = "";
-    }
-
-    function loadComments(streamId) {
-      const container = document.getElementById(`comments-${streamId}`);
-      db.collection("comments")
-        .where("streamId", "==", streamId)
-        .orderBy("timestamp")
-        .onSnapshot(snapshot => {
-          container.innerHTML = "";
-          snapshot.forEach(doc => {
-            const data = doc.data();
-            container.innerHTML += `<div><strong>${data.user}:</strong> ${data.message}</div>`;
-          });
-        });
-    }
-
-    function likePost(docId) {
-      alert("👍 Liked post: " + docId);
-    }
-
-    function sharePost(docId) {
-      const url = window.location.href + "#" + docId;
-      navigator.clipboard.writeText(url)
-        .then(() => alert("🔗 Link copied: " + url));
-    }
-
-    function startCameraStream() {
-      const video = document.getElementById('livePreview');
-      navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(stream => {
-          video.srcObject = stream;
-          video.style.display = 'block';
-        })
-        .catch(err => alert("Could not access camera: " + err.message));
-    }
-
-    loadLivestreams();
   </script>
+
 </body>
 </html>
