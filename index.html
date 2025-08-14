@@ -1,366 +1,57 @@
 <!DOCTYPE html>
-<html lang="my">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ရွှေဟင်္သာ ရေဒီယို | Shwehinnthar Radio</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Myanmar Text", sans-serif;
-      background: linear-gradient(to bottom, #ffd700, #fff8dc);
-      color: #333;
-      transition: background 0.5s, color 0.5s;
-    }
-
-    .dark-mode {
-      background: #111;
-      color: #eee;
-    }
-
-    header {
-      background-color: #a90002;
-      padding: 20px 10px;
-      text-align: center;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 2em;
-      color: white;
-    }
-
-    header p {
-      margin-top: 5px;
-      font-size: 1.2em;
-      color: #daa520;
-    }
-
-    .container {
-      padding: 30px 20px;
-      max-width: 900px;
-      margin: auto;
-      text-align: center;
-    }
-
-    .logo {
-      max-width: 200px;
-      margin: 20px auto;
-      border-radius: 10px;
-    }
-
-    .radio-player {
-      margin: 30px 0;
-    }
-    h2 {color: red;}
-    audio {
-      width: 100%;
-      max-width: 500px;
-      border-radius: 8px;
-    }
-
-    .info, .contact, .map, .social, .schedule, .contact-form {
-      background-color: #fffbe6;
-      padding: 20px;
-      border-radius: 10px;
-      margin-top: 20px;
-      line-height: 1.7em;
-    }
-
-    .dark-mode .info,
-    .dark-mode .contact,
-    .dark-mode .map,
-    .dark-mode .social,
-    .dark-mode .schedule,
-    .dark-mode .contact-form {
-      background-color: #222;
-    }
-
-    .social a {
-      margin: 0 10px;
-      font-size: 1.5em;
-      text-decoration: none;
-      color: #333;
-    }
-
-    .dark-mode .social a {
-      color: #f8f8f8;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 40px;
-      padding-bottom: 20px;
-    }
-
-    .toggle-btn {
-      background: #333;
-      color: #fff;
-      padding: 10px 20px;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
-      margin-top: 20px;
-    }
-
-    .toggle-btn:hover {
-      background: #000;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center;
-    }
-
-    th {
-      background-color: #f2f2f2;
-    }
-
-    /* Contact Form Styles */
-    .contact-form {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .contact-form label {
-      margin: 10px 0 5px;
-      font-weight: bold;
-    }
-
-    .contact-form input, .contact-form textarea {
-      width: 100%;
-      max-width: 300px;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-
-    .contact-form input[type="submit"] {
-      background-color: #a90002;
-      color: white;
-      cursor: pointer;
-    }
-
-    .contact-form input[type="submit"]:hover {
-      background-color: #b30003;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shwehinnthar Stream Player</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+  h1 {
+    margin-bottom: 1rem;
+color: red;
+  }
+h3{color: yellow;}
+  audio {
+    width: 300px;
+    outline: none;
+  }
+  .info {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #ccc;
+    text-align: left;
+    max-width: 320px;
+  }
+  a {
+    color: #4CAF50;
+  }
+</style>
 </head>
+
 <body>
-
-  <header>
-    <h1>ရွှေဟင်္သာ ရေဒီယို</h1>
-    <p>Shwehinnthar Radio</p>
-  </header>
-
-  <div class="container">
-
-    <!-- 🎨 Logo -->
-    <img src="fmlogo.png" alt="ရွှေဟင်္သာ ရေဒီယို Logo" class="logo">
-
-    <!-- 🌃 Dark Mode Toggle -->
-    <button class="toggle-btn" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
-
-    <!-- 📻 Radio Player -->
-    <div class="radio-player">
-      <h2>📻 Live 24/7.<br>တိုက်ရိုက်ထုတ်လွှင့်နေသည်..!</h2>
-      <audio controls autoplay>
-        <source src="https://stream.zeno.fm/nv7i41tz04mtv" type="audio/mpeg">
-        သင့် browser သည် audio player ကို မပံ့ပိုးပါ။
-      </audio>
-    </div>
-
-    <!-- 📅 Schedule Table -->
-    <div class="schedule">
-      <h3>📅 ရေဒီယိုအစီအစဉ် အချိန်ဇယား</h3>
-      <table>
-        <tr>
-          <th>အချိန်</th>
-          <th>အစီအစဉ်</th>
-        </tr>
-        <tr>
-          <td>05:00 AM</td>
-          <td>တရားတော်များ</td>
-        </tr>
-        <tr>
-          <td>06:00 AM</td>
-          <td>နံနက်မင်္ဂလာတေးများ</td>
-        </tr>
-        <tr>
-          <td>07:00 AM</td>
-          <td>သိကောင်းစရာအဖြာဖြာ</td>
-        </tr>
-        <tr>
-          <td>08:00 AM</td>
-          <td>မြန်မာသံစဉ်တေးများ</td>
-        </tr>
-        <tr>
-          <td>09:00 AM</td>
-          <td>မျက်မှောက်ရေးရာအဖြာဖြာ</td>
-        </tr>
-        <tr>
-          <td>10:00 AM</td>
-          <td>ခေတ်ပေါ်တေးသီချင်းများ</td>
-        </tr>
-        <tr>
-          <td>11:00 AM</td>
-          <td>ဇာတ်လမ်းပမာ နားဆင်စရာ</td>
-        </tr>
-        <tr>
-          <td>12:00 AM</td>
-          <td>မြန်မာသံစဉ်သီချင်းများ</td>
-        </tr>
-        <tr>
-          <td>01:00 PM</td>
-          <td>ခေတ်ပေါ်တေးသီချင်းများ</td>
-        </tr>
-        <tr>
-          <td>02:00 PM</td>
-          <td>သင်ကြားရေးအစီအစဉ်</td>
-        </tr>
-        <tr>
-          <td>03:00 PM</td>
-          <td>အင်္ဂလိပ်စာ၊ အင်္ဂလိပ်စကား</td>
-        </tr>
-        <tr>
-          <td>04:00 PM</td>
-          <td>ဆောင်းပါး/ပုံပြင်အစီအစဉ်</td>
-        </tr>
-        <tr>
-          <td>05:00 PM</td>
-          <td>အလွမ်းတေးသီချင်းများ</td>
-        </tr>
-        <tr>
-          <td>06:00 PM</td>
-          <td>မြန်မာသံစဉ်သီချင်းများ</td>
-        </tr>
-        <tr>
-          <td>07:00 PM</td>
-          <td>ဆွေးနွေးပွဲအစီအစဉ်များ</td>
-        </tr>
-        <tr>
-          <td>08:00 PM</td>
-          <td>တရားဆွေးနွေးချက်အစီအစဉ်</td>
-        </tr>
-        <tr>
-          <td>09:00 PM</td>
-          <td>ခံစားမှုတေးသီချင်းများ</td>
-        </tr>
-        <tr>
-          <td>10:00 PM</td>
-          <td>ညအိပ်ယာဝင်သီချင်းများ</td>
-        </tr>
-        <tr>
-          <td>11:00 PM</td>
-          <td>တရားတော်များ</td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- 📍 Location Info -->
-    <div class="info">
-      <h3>📍 ကြော်ငြာများထည့်သွင်းနိုင်ပါသည်</h3>
-      <p>
-       ညနေ ၃ နာရီအချိန် အင်္ဂလိပ်စကားပြောနည်းများ ထုတ်လွှင့်သင်ကြားပေးပါမည်။<br>
-        သင်တန်းနှင့်ပတ်သက်၍ တစ်စုံတစ်ရာ မေးမြန်းလိုပါက အောက်ပါအတိုင်း ဆက်သွယ်မေးမြန်းနိုင်ပါသည်။
-      </p>
-    </div>
-
-    <!-- 📞 Contact Info -->
-    <div class="contact">
-      <h3>📞 ဆက်သွယ်ရန်</h3>
-      <p>ပဲခူးတိုင်းဒေသကြီး၊ <br>
-        ညောင်လေးပင်ခရိုင်၊ <br>
-        ညောင်လေးပင်မြို့၊ မြို့မ ၅ ရပ်ကွက်၊ <br>
-        ရွှေဟင်္သာလမ်း၊ ရွှေဟင်္သာစင်တာ <br>
-        ဖုန်း: +959-33913388 <br>
-        Email: shwehinntharcentre@gmail.com
-      </p>
-    </div>
-
-    <!-- 📞 Contact Form -->
-    <div class="contact-form">
-      <h3>📞 ဆက်သွယ်ရန် ဖောင်</h3>
-      <form id="contactForm">
-          <label for="name">အမည်:</label>
-          <input type="text" id="name" name="name" required aria-label="Your Name">
-
-          <label for="email">လိပ်စာ:</label>
-          <input type="email" id="email" name="email" required aria-label="Your Email">
-
-          <label for="message">အကြောင်း:</label>
-          <textarea id="message" name="message" required aria-label="Your Message"></textarea>
-
-          <input type="submit" value="Send">
-      </form>
-    </div>
-
-    <!-- 🌐 Google Map -->
-    <div class="map">
-      <h3>🌐 Google Map</h3>
-      <iframe 
-  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d152.23059666227097!2d96.7230058!3d17.9632234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30c40b002efab0ad%3A0x5412241dc0cc1fc5!2sShwehinnthar%20Center!5e0!3m2!1sen!2smm!4v1722834745671!5m2!1sen!2smm" 
-  width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
-</iframe>
-    </div>
-
-    <!-- 📱 Social Media -->
-    <div class="social">
-      <h3>📱 Social Media</h3>
-      <a href="https://facebook.com/hinntharstudio" target="_blank">📘 Facebook</a>
-      <a href="https://www.youtube.com/@shwehinntharlive" target="_blank">▶️ YouTube</a>
-      <a href="https://m.me/hinntharstudio" target="_blank">💬 Messenger</a>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-      © 2025 ရွှေဟင်္သာ ရေဒီယို | Shwehinnthar Radio
-    </footer>
+  <h1>Shwehinnthar  Radio<br>Live Stream Player</h1>
+<h3> ရွှေဟင်္သာရေဒီယိုတွင် တိုက်ရိုက်ထုတ်လွှင့်လိုပါက <br> အောက်ပါအတိုင်း  copy  ယူဖြည့်စွက်၍ အသုံးပြုနိုင်သည်။</h3>
+ <br><br><br><br> 
+<audio controls autoplay>
+    <source src="http://link.zeno.fm/pxn7p5cbm48uv/source" type="audio/mpeg" />
+    Your browser does not support the audio element.
+  </audio>
+<br><br><br><br>
+  <div class="info">
+    <p>Streaming: <a href="http://link.zeno.fm/pxn7p5cbm48uv/source" target="_blank" rel="noopener noreferrer">link.zeno.fm/pxn7p5cbm48uv/source</a></p>
+    <p>Port: 80 ; Audio: Mp3</p>
+<p>Bitrate: 128k; Samplerate: 48000Hz</p>
+    <p>Mount Password: CI6GCmRy</p>
   </div>
-
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>
-    (function() {
-        emailjs.init("SGKNPgbHDi1FVFtra"); // သင့် User ID ကို ထည့်ပါ
-    })();
-
-    document.getElementById('contactForm').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevent the form from submitting
-
-        // Get form values
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const message = document.getElementById('message').value;
-
-        // Send email using EmailJS
-        emailjs.send("service_q2r32eb", "template_ae5rjnc", {
-            name: name,
-            email: email,
-            message: message
-        })
-        .then(function(response) {
-            alert("Your message has been sent successfully!");
-            document.getElementById('contactForm').reset(); // Clear the form
-        }, function(error) {
-            alert("There was a problem sending your message.");
-        });
-    });
-
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
-  </script>
-
 </body>
 </html>
